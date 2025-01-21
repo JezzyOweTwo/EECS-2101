@@ -2,9 +2,12 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 public class RecursiveMethods {
+	public static HashSet<ArrayList<Integer>> solutions =  new HashSet<>();
+	
 	public RecursiveMethods() {}
 	
 	 /* Input: A string `in_string`
@@ -38,25 +41,29 @@ public class RecursiveMethods {
 	 * Hint: You should not need to use a loop.  
 	 */
 	public boolean task2(int[] nums, int target) {
-		if (nums.length<=0)
-			return false;
-		
-		if (helperTask2(nums,target,1))
-			return true;
-	
-		return task2(Arrays.copyOfRange(nums,1,nums.length),target);	
+		int[] indexes = {};
+		return this.helperTask2(nums,target,indexes);
 	}
 	
-	public boolean helperTask2(int[] nums, int target, int i) {
+	public boolean helperTask2(int[] nums, int target, int[] indexes) {	
+		int sum=0;
+		for (int j:indexes) 
+			sum+=nums[j];
 		
-		if (nums[0]==target)
+		if (sum==target)
 			return true;
 		
-		else if (nums[0]>target  ||  i>=nums.length)
+		else if (sum>target)
 			return false;
 		
-		nums[0]+=nums[i++];
-		return helperTask2(nums, target, i);
+		indexes = Arrays.copyOf(indexes, indexes.length+1);
+		
+		boolean result=false;
+		for (int j=0;j<nums.length-indexes.length;j++) {
+	//		indexes[indexes.length-1]=indexes[j]+1;
+			result = result | helperTask2(nums,target,indexes );
+		}
+		return result;
 	}
 	
 	 /* Inputs: An integer `h` (height of a staircase) and an integer `n` (maximum steps of each climb)
@@ -71,21 +78,39 @@ public class RecursiveMethods {
 	 */
 	public int task3(int h,int n) {
 		int [] arr = {};
-		return helpertask3( h, n,0, arr);
+		int response =helpertask3( h, n,0, arr);
+		HashSet<ArrayList<Integer>> sol = new HashSet<>(this.solutions); // super ghetto way of making helpertask3 reuseable.
+		this.solutions=new HashSet<ArrayList<Integer>>();				// super ghetto way of making helpertask3 reuseable.
+		return response;
 	}
 	
 	public int helpertask3(int h,int n, int i, int[] path) {
 		path = Arrays.copyOf(path, path.length+1);
 		path[path.length-1] = i;
 		
-		int sum =0;
+		int sum = 0;
 		for (int j=0;j<path.length;j++)
 			sum+=path[j];
 		
-		if (sum==h) return 1;
+		if (sum==h) {
+			ArrayList<Integer> validsolution = new ArrayList<>();
+			for (int j:path) {
+				if (j==0) continue;		// all of my paths start at zero, but i don't want that to actually be added to the array. 
+				validsolution.add(j);
+			}
+				
+			this.solutions.add(validsolution);
+			return 1;
+		}
 		else if (sum>h) return 0;
 		
-		return helpertask3(h,n,1,path) + helpertask3(h,n,2,path);
+		int sum2=0;
+		
+		for (int k=n;k>0;k--) {
+			sum2+=helpertask3(h,n,k,path);
+		}
+		return sum2;
+	//	return helpertask3(h,n,1,path) + helpertask3(h,n,2,path);
 	}
 	
 	 /* Inputs of this task are the same as those of Task 3, 
@@ -94,8 +119,12 @@ public class RecursiveMethods {
 	 * Output of this task is a HashSet, where each element is an ArrayList.
 	 * Each ArrayList encodes a strategy for climbing the staircase.
 	 */
-	public <T>HashSet<ArrayList<Integer>> task4(int h,int n){
-		return null;
+	public HashSet<ArrayList<Integer>> task4(int h,int n){
+		int [] arr = {};
+		helpertask3( h, n,0, arr);
+		HashSet<ArrayList<Integer>> sol = new HashSet<>(this.solutions); // super ghetto way of making helpertask4 reuseable.
+		this.solutions=new HashSet<ArrayList<Integer>>();				// super ghetto way of making helpertask4 reuseable.
+		return sol;
 	}
 	
 }
