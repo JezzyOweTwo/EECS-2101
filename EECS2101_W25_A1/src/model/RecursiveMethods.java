@@ -118,7 +118,5 @@ public class RecursiveMethods {
 		helpertask3(h,n,0,0,temp);
 		return this.validSauce;			// this question actually asks for validSauce (blah blah blah non static reference to static variable STFU)
 	}
-
-	
 }
 
