@@ -1,10 +1,11 @@
 package model;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
 public class RecursiveMethods {
+	private static HashSet<ArrayList<Integer>> validSauce = new HashSet<>();
+	
 	public RecursiveMethods() {}
 	
 	 /* Input: A string `in_string`
@@ -14,17 +15,21 @@ public class RecursiveMethods {
 	 * 	return `out_string` made of only the pair of parentheses and their enclosed characters. 
 	 */
 	public String task1(String input) {
-		// if the use enters a string that does not contains "()", 
-		// the empty string is returned.
+		// if a string that's less than two characters is inputted, the original input is returned.
+		// (bulllshit prevention)
 		if (input.length()<2)
-			return "";
-		
+			return input;
+			
+		// onces the first char is '(' and the last is ')', return input
 		if (input.charAt(0)=='('  &&  input.charAt(input.length()-1)==')')
 			return input;
+		
+		// once first char is '(', start removing the last char over and over
 		else if (input.charAt(0)=='(')
 			return task1(input.substring(0,input.length()-1));
-		else 
-			return task1(input.substring(1,input.length()));
+		
+		// start by removing characters from the beginning of the word.
+		return task1(input.substring(1,input.length()));
 	}
 	
 	 /* Inputs: An array `a` of integers and an integer `target`
@@ -40,23 +45,23 @@ public class RecursiveMethods {
 	public boolean task2(int[] nums, int target) {
 		if (nums.length<=0)
 			return false;
-		
-		if (helperTask2(nums,target,1))
-			return true;
-	
-		return task2(Arrays.copyOfRange(nums,1,nums.length),target);	
+		return helperTask2(nums,0,target,0);	
 	}
 	
-	public boolean helperTask2(int[] nums, int target, int i) {
+	private boolean helperTask2(int[] nums,int curnum, int target, int sum) {
 		
-		if (nums[0]==target)
+		// if you've reached the target, you CHILL
+		if (sum==target)
 			return true;
 		
-		else if (nums[0]>target  ||  i>=nums.length)
+		// if you've overshot the target, or iterated through the whole array, you unchill
+		else if (curnum>=nums.length || sum>target)
 			return false;
 		
-		nums[0]+=nums[i++];
-		return helperTask2(nums, target, i);
+		// either option A: you include the current number in your solution
+		// or     option B: you don't include the current number in your solution.
+		return helperTask2(nums,curnum+1,target,sum+nums[curnum]) ||
+			   helperTask2(nums,curnum+1,target,sum);
 	}
 	
 	 /* Inputs: An integer `h` (height of a staircase) and an integer `n` (maximum steps of each climb)
@@ -70,22 +75,35 @@ public class RecursiveMethods {
 	 * Assumption: n <= h, each climb takes at least 1 step
 	 */
 	public int task3(int h,int n) {
-		int [] arr = {};
-		return helpertask3( h, n,0, arr);
+		Integer[] temp = {};
+		if (h<=0||n<=0) return 0;	// bullshit prevention
+		validSauce.clear();			// empties validSauce. It's a static variable, so reuse makes it break.
+		return helpertask3(h,n,0,0,temp);
 	}
 	
-	public int helpertask3(int h,int n, int i, int[] path) {
-		path = Arrays.copyOf(path, path.length+1);
-		path[path.length-1] = i;
+	// Ok technically this is also what i use to solve q4
+	public int helpertask3(int height,int maxStep, int sum,int i,Integer[] currentSol) {		
+		currentSol = Arrays.copyOfRange(currentSol, 0, currentSol.length+1);	// makes array one bigger
+		currentSol[currentSol.length-1] = i;										// adds i to the current solution
 		
-		int sum =0;
-		for (int j=0;j<path.length;j++)
-			sum+=path[j];
+		// if the current path has the correct height, return a 1, and add it to validSauce
+		if (sum==height) {
+			ArrayList<Integer>temp = new ArrayList<>(Arrays.asList(currentSol));
+			temp.remove(0);	// all my paths start with index 0. This manually removes that.
+			validSauce.add(temp);
+			return 1;
+		}
+
+		// If you've overshot the target, this path is not valid. give a 0, dumbass.
+		else if (sum>height) return 0;
 		
-		if (sum==h) return 1;
-		else if (sum>h) return 0;
+		int solutionCount = 0;
 		
-		return helpertask3(h,n,1,path) + helpertask3(h,n,2,path);
+		// iterates through da tree, with the maxiumum size of each step being determined by j
+		for (int j =1;j<=maxStep;j++) 
+			solutionCount += helpertask3(height,maxStep, sum+j,j,currentSol);
+		
+		return solutionCount;
 	}
 	
 	 /* Inputs of this task are the same as those of Task 3, 
@@ -94,9 +112,13 @@ public class RecursiveMethods {
 	 * Output of this task is a HashSet, where each element is an ArrayList.
 	 * Each ArrayList encodes a strategy for climbing the staircase.
 	 */
-	public <T>HashSet<ArrayList<Integer>> task4(int h,int n){
-		return null;
+	public HashSet<ArrayList<Integer>> task4(int h,int n){
+		Integer[] temp = {};			
+		validSauce.clear();				// once again empties validSauce. same reason as in task3
+		helpertask3(h,n,0,0,temp);
+		return this.validSauce;			// this question actually asks for validSauce (blah blah blah non static reference to static variable STFU)
 	}
+
 	
 }
 

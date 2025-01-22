@@ -236,4 +236,23 @@ public class StarterTests {
 	    assertTrue(output.contains(Arrays.asList(2, 2)));
 	    assertTrue(output.contains(Arrays.asList(3, 1)));
 	} 
+	
+	@Test
+	public void jezzycoolTest() {
+		RecursiveMethods rm = new RecursiveMethods();
+		int output = rm.task3(5, 3);
+		assertEquals(13,output);
+		
+		output = rm.task3(5, 2);
+		assertEquals(8,output);
+		
+		output = rm.task3(5, 1);
+		assertEquals(1,output);
+		
+		output = rm.task3(0, 1);
+		assertEquals(0,output);
+		
+		output = rm.task3(1, 0);
+		assertEquals(0,output);
+	}
 }
