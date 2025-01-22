@@ -46,27 +46,27 @@ public class Utilities {
 	}
 	
 	public static ArrayList<ArrayList<Integer>> splitArrayHarder(int[] ns) {
-		Integer[] temp= {};
 		ArrayList<ArrayList<Integer>> validSolution = new ArrayList<>(2);
-		return splitArrayHarder(ns, 0,0,temp,0,temp,validSolution);
+		validSolution.add(new ArrayList<Integer>());
+		validSolution.add(new ArrayList<Integer>());
+		return splitArrayHarder(ns,0,0,0,validSolution);
 	}
 	
-	private static ArrayList<ArrayList<Integer>> splitArrayHarder(int[] ns, int i,int leftSum,Integer[] indexleft,int rightSum,Integer[] indexright,ArrayList<ArrayList<Integer>> validSolution){
+	private static ArrayList<ArrayList<Integer>> splitArrayHarder(int[] ns, int i,int leftSum,int rightSum,ArrayList<ArrayList<Integer>> validSolution){
 		// add the new index to the array
 		
-		if (i==ns.length && leftSum==rightSum) {
-			validSolution.add(new ArrayList<Integer>(Arrays.asList(indexleft)));
-			validSolution.add(new ArrayList<Integer>(Arrays.asList(indexright)));
+		if (i==ns.length && leftSum==rightSum) 
 			return validSolution;
-		}
 			
 		else if (i==ns.length) {
-			validSolution.add(new ArrayList<Integer>());
-			validSolution.add(new ArrayList<Integer>());
+			validSolution.set(0, new ArrayList<Integer>());	// empties the first arraylist
+			validSolution.set(1, new ArrayList<Integer>());	// empties the second arraylist
 			return validSolution;
 		}
 				
-		return splitArrayHarder(ns,i+1,leftSum+ns[i+1],indexleft,rightSum,indexright)
-			   splitArrayHarder(ns,i+1,leftSum,indexleft,rightSum+ns[i+1],indexright);
+		splitArrayHarder(ns,i+1,leftSum+ns[i+1],rightSum,(validSolution.get(0).add(i)) ? validSolution:null); 
+		splitArrayHarder(ns,i+1,leftSum,rightSum+ns[i+1],(validSolution.get(1).add(i)) ? validSolution:null);
+		return validSolution;
+			  
 	}
 }
