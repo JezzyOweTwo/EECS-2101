@@ -16,9 +16,6 @@ public class RecursiveMethods {
 	 */
 	public String task1(String input) {
 		// if a string that's less than two characters is inputted, the original input is returned.
-		// (bulllshit prevention)
-		if (input.length()<2)
-			return input;
 			
 		// onces the first char is '(' and the last is ')', return input
 		if (input.charAt(0)=='('  &&  input.charAt(input.length()-1)==')')
@@ -43,8 +40,7 @@ public class RecursiveMethods {
 	 * Hint: You should not need to use a loop.  
 	 */
 	public boolean task2(int[] nums, int target) {
-		if (nums.length<=0)
-			return false;
+		if (nums.length<=0)return false;
 		return helperTask2(nums,0,target,0);	
 	}
 	
@@ -75,16 +71,28 @@ public class RecursiveMethods {
 	 * Assumption: n <= h, each climb takes at least 1 step
 	 */
 	public int task3(int h,int n) {
-		Integer[] temp = {};
 		if (h<=0||n<=0) return 0;	// bullshit prevention
-		validSauce.clear();			// empties validSauce. It's a static variable, so reuse makes it break.
-		return helpertask3(h,n,0,0,temp);
+		//return helpertask3(h,n,0,0,temp);
+		return otherhelpertask3(h,n,0);
 	}
+	
+	public int otherhelpertask3(int height,int maxStep,int sum) {
+		if (sum==height) return 1;		// you've successfully got da current sum
+		else if (sum>height) return 0;	// you've overshot the sum
+		
+		int solutionCount=0;
+		
+		for (int i=1;i<=maxStep;i++) 
+			solutionCount+=otherhelpertask3(height,maxStep,sum+i);
+		
+		return solutionCount;
+	}
+	
 	
 	// Ok technically this is also what i use to solve q4
 	public int helpertask3(int height,int maxStep, int sum,int i,Integer[] currentSol) {		
 		currentSol = Arrays.copyOfRange(currentSol, 0, currentSol.length+1);	// makes array one bigger
-		currentSol[currentSol.length-1] = i;										// adds i to the current solution
+		currentSol[currentSol.length-1] = i;									// adds i to the current solution
 		
 		// if the current path has the correct height, return a 1, and add it to validSauce
 		if (sum==height) {
@@ -113,10 +121,28 @@ public class RecursiveMethods {
 	 * Each ArrayList encodes a strategy for climbing the staircase.
 	 */
 	public HashSet<ArrayList<Integer>> task4(int h,int n){
-		Integer[] temp = {};			
-		validSauce.clear();				// once again empties validSauce. same reason as in task3
-		helpertask3(h,n,0,0,temp);
-		return this.validSauce;			// this question actually asks for validSauce (blah blah blah non static reference to static variable STFU)
+		HashSet<ArrayList<Integer>> temp = new HashSet<>();		// creates a new HashSet to hold the valid solutions
+		if (h<=0||n<=0) return temp;							// bullshit prevention
+		task4helper(h,n,0,new ArrayList<Integer>(),temp);	// all valid solutions are appended to temp. 
+		return temp;											// temp is returned
+	}
+	
+	public void task4helper(int height,int maxStep,int sum,ArrayList<Integer> currentSol,HashSet<ArrayList<Integer>> solutions) {
+		// if you've hit the target, add the sucessful solution to solutions, and stop recursing
+		if (sum==height) {
+			solutions.add (new ArrayList<Integer> (currentSol));
+			return;
+		}
+		
+		// if you've overshot the target, this solution is not valid. Stop recursing.
+		else if (sum>height) return;
+		
+		// iterates every possible combination of values for the staircase, from 1 to n.
+		for (int i=1;i<=maxStep;i++) {
+			ArrayList<Integer> temp = new ArrayList<>(currentSol);	// currentSol needs to be copied to avoid issues with passing by reference
+			temp.add(i);											// adds a step to currentSol
+			task4helper(height,maxStep,sum+i,temp,solutions);		// recurisvely calls itself.
+		}
 	}
 }
 
