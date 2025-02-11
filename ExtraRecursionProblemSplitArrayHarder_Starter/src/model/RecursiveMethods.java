@@ -78,10 +78,6 @@ public class RecursiveMethods {
 		temp.add(ns[i]);
 		splitArrayHarder5(ns,i+1,leftValues,temp,validSol);
 	}
-
-	
-	
-	
 	
 	public ArrayList<ArrayList<Integer>> splitArrayHarder4(int[] ns,int i,int leftSum,ArrayList<Integer>leftValues,int rightSum,ArrayList<Integer>rightValues) {
 		if (i==ns.length&&leftSum==rightSum) {
