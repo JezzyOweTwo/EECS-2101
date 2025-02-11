@@ -45,15 +45,43 @@ public class RecursiveMethods {
 	 */
 
 	public ArrayList<ArrayList<Integer>> splitArrayHarder(int [] ns){
-		ArrayList<ArrayList<Integer>> temp = new ArrayList<>(2);
-		temp.add(new ArrayList<Integer>());
-		temp.add(new ArrayList<Integer>());
-		if (ns.length<=1) return temp;
-		//ArrayList<ArrayList<Integer>>poop = splitArrayHarder3(ns,0,0,0,temp);
-		
-		ArrayList<ArrayList<Integer>>poop= splitArrayHarder4(ns,0,0,new ArrayList<Integer>(),0,new ArrayList<Integer>());
-		return (poop.size()==0)?temp:poop;
+		ArrayList<ArrayList<Integer>> validSolution = new ArrayList<>(2);
+		validSolution.add(new ArrayList<Integer>());
+		validSolution.add(new ArrayList<Integer>());
+		splitArrayHarder5(ns,0,new ArrayList<Integer>(), new ArrayList<Integer>(),validSolution); 
+		return validSolution;
 	}
+	
+	public void splitArrayHarder5(int[] ns,int i,ArrayList<Integer> leftValues,ArrayList<Integer>rightValues,ArrayList<ArrayList<Integer>> validSol) {
+		if (i==ns.length) {
+			int leftSum=0,rightSum=0;
+			
+			for (int j:leftValues) 
+				leftSum+=j;
+			
+			for (int j:rightValues) 
+				rightSum+=j;
+			
+			if (leftSum==rightSum) {
+				validSol.set(1, new ArrayList<Integer>(leftValues));
+				validSol.set(0, new ArrayList<Integer>(rightValues));
+			}
+			return;
+		}
+		// left side
+		ArrayList<Integer> temp = new ArrayList<>(leftValues);
+		temp.add(ns[i]);
+		splitArrayHarder5(ns,i+1,temp,rightValues,validSol);
+		
+		// right side
+		temp= new ArrayList<>(rightValues);
+		temp.add(ns[i]);
+		splitArrayHarder5(ns,i+1,leftValues,temp,validSol);
+	}
+
+	
+	
+	
 	
 	public ArrayList<ArrayList<Integer>> splitArrayHarder4(int[] ns,int i,int leftSum,ArrayList<Integer>leftValues,int rightSum,ArrayList<Integer>rightValues) {
 		if (i==ns.length&&leftSum==rightSum) {
