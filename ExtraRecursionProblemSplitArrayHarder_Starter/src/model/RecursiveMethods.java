@@ -56,9 +56,11 @@ public class RecursiveMethods {
 		if (i==ns.length) {
 			int leftSum=0,rightSum=0;
 			
+			// summates left values
 			for (int j:leftValues) 
 				leftSum+=j;
 			
+			// summates right values
 			for (int j:rightValues) 
 				rightSum+=j;
 			
@@ -68,6 +70,7 @@ public class RecursiveMethods {
 			}
 			return;
 		}
+		
 		// left side
 		ArrayList<Integer> temp = new ArrayList<>(leftValues);
 		temp.add(ns[i]);
