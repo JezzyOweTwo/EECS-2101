@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /*
  * Requirement:
@@ -9,6 +10,79 @@ import java.util.Arrays;
  */
 public class RecursiveMethods {
 
+	
+	
+	public static HashSet<String> generateExpressions(String digits, int target){
+		HashSet<String> answer = new HashSet<String>();
+		generateExpressions(answer,digits,0,target,"");
+		return answer;
+	}
+	
+	private static void generateExpressions(HashSet<String> answer, String digits, int curVal,int target,String curStr){
+		
+		if (digits.length()==0&&curVal==target){
+			answer.add(new String(curStr));
+			return;
+		} 
+		else if (digits.length()==0) {
+			System.out.println(curStr+"="+curVal);
+			return;
+		}
+		
+		int curDigit = digits.charAt(0) - '0';
+		
+		generateExpressions(answer, digits.substring(1,digits.length()),curVal+curDigit,target,curStr+"+"+curDigit);
+		generateExpressions(answer, digits.substring(1,digits.length()),curVal-curDigit,target,curStr+"-"+curDigit);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static HashSet<ArrayList<Integer>> getAllPermutations(ArrayList<Integer> nums){
+		HashSet<ArrayList<Integer>> answer = new HashSet<>();
+		getAllPermutationsHelper(answer,nums,new ArrayList<Integer>());
+		return answer;
+	}
+	
+	private static void getAllPermutationsHelper(HashSet<ArrayList<Integer>> answer,ArrayList<Integer> nums,ArrayList<Integer> currentSol) {
+		if (nums.size()==0) {
+			answer.add(new ArrayList<Integer>(currentSol));
+			return;
+		}
+		
+		ArrayList<Integer> newNums;
+		ArrayList<Integer> newCurrentSol;
+		for (int i=0;i<nums.size();i++) {
+			newCurrentSol = new ArrayList<>(currentSol);
+			newCurrentSol.add(nums.get(i));
+			newNums = new ArrayList<>(nums);
+			newNums.remove(i);
+			getAllPermutationsHelper(answer,newNums,newCurrentSol);
+		}
+	}
+	
 	public boolean splitArray(int[] array) {
 		return splitArrayHelper(array,0,0,0);
 	}
@@ -198,6 +272,7 @@ public class RecursiveMethods {
 //		return temp;
 		return null; // i just put that here so the code would compile.
 	}
+
 }
 
 

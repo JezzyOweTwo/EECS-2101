@@ -53,8 +53,7 @@ public class ListUtilities<T> {
 			tmp = tmp.getNext();
 		}
 		
-		return head;
-		
+		return head;	
 	}
 	
 	

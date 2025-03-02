@@ -39,6 +39,21 @@ public class RecursiveMethods {
 	 * 
 	 * Hint: You should not need to use a loop.  
 	 */
+	
+	
+	
+	
+	
+	
+	public boolean helpertask2(int[] nums, int target, int curnum, int i){
+		if (curnum==target) return true;
+		if (curnum>target) return false;
+		
+		return helpertask2(nums, target, curnum+nums[i+1],i+1) || helpertask2(nums, target, curnum,i+1);
+		
+	}
+	
+	
 	public boolean task2(int[] nums, int target) {
 		if (nums.length<=0)return false;
 		return helperTask2(nums,0,target,0);	
@@ -89,6 +104,19 @@ public class RecursiveMethods {
 	}
 	
 	
+	public int heklpertaskthree(int height, int maxStep,int curVal) {
+		if (curVal==height) return 1;
+		if (curVal>height) return 0;
+		
+		int validSol=0;
+		for (int i=1;i<=maxStep;i++) {
+			validSol = heklpertaskthree(height, maxStep,curVal+i);
+		}
+		return validSol;
+	}
+	
+	
+	
 	// Ok technically this is also what i use to solve q4
 	public int helpertask3(int height,int maxStep, int sum,int i,Integer[] currentSol) {		
 		currentSol = Arrays.copyOfRange(currentSol, 0, currentSol.length+1);	// makes array one bigger
@@ -120,6 +148,20 @@ public class RecursiveMethods {
 	 * Output of this task is a HashSet, where each element is an ArrayList.
 	 * Each ArrayList encodes a strategy for climbing the staircase.
 	 */
+	
+	public void task4Helper(HashSet<ArrayList<Integer>> answer, ArrayList<Integer> currentSol, int height,int maxStep,int curVal) {
+		if (curVal==height) {
+			answer.add(new ArrayList<Integer>(currentSol));
+			return;
+		}
+		else if (curVal>height)return;
+		
+		for (int i=1;i<maxStep;i++) {
+			
+		}
+	}
+	
+	
 	public HashSet<ArrayList<Integer>> task4(int h,int n){
 		HashSet<ArrayList<Integer>> temp = new HashSet<>();		// creates a new HashSet to hold the valid solutions
 		if (h<=0||n<=0) return temp;							// bullshit prevention
